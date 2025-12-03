@@ -1,46 +1,95 @@
 import React from "react";
+import { useGetResultQuery } from "../services/quizApi";
+import { useParams } from "react-router-dom";
 
-const ResultTable = () => {
-  const data = [
-    { id: 1, obtained: 18, total: 20, date: "2025-11-29", time: "10:30 AM" },
-    { id: 2, obtained: 15, total: 20, date: "2025-11-29", time: "11:15 AM" },
-    { id: 3, obtained: 20, total: 20, date: "2025-11-29", time: "12:00 PM" },
-  ];
+const Dashboard = () => {
+  const { id } = useParams();
+  const { isLoading, data } = useGetResultQuery(id);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen text-xl font-semibold">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!data?.results?.length) {
+    return (
+      <div className="flex justify-center items-center h-screen text-xl font-semibold">
+        No Results Found
+      </div>
+    );
+  }
+
+  const username = data.results[0].username;
+  const totalAttempts = data.results.length;
 
   return (
-    <div className="p-4 w-full">
-      {/* Responsive wrapper */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-300 rounded-lg">
-          
-          {/* Table Head */}
-          <thead className="bg-blue-100">
+    <div className="p-6 max-w-5xl mx-auto">
+      <h1 className="text-3xl font-bold mb-2">Hi, {username} 👋</h1>
+      <p className="text-gray-600 mb-6">
+        Here is your quiz performance summary.
+      </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className="bg-white shadow-md rounded-lg p-4 border-l-4 border-blue-500">
+          <h2 className="text-xl font-bold">{totalAttempts}</h2>
+          <p className="text-gray-600">Total Attempts</p>
+        </div>
+
+        <div className="bg-white shadow-md rounded-lg p-4 border-l-4 border-green-500">
+          <h2 className="text-xl font-bold">
+            {data.results[0].score}/{data.results[0].totalQuestions}
+          </h2>
+          <p className="text-gray-600">Latest Score</p>
+        </div>
+
+        <div className="bg-white shadow-md rounded-lg p-4 border-l-4 border-purple-500">
+          <h2 className="text-xl font-bold">{data.results[0].category}</h2>
+          <p className="text-gray-600">Last Played Category</p>
+        </div>
+      </div>
+
+      <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
+        <table className="min-w-full border rounded-lg overflow-hidden">
+          <thead className="bg-gray-900 text-white">
             <tr>
-              <th className="px-4 py-3 border text-left text-sm md:text-base">S.No</th>
-              <th className="px-4 py-3 border text-left text-sm md:text-base">Marks Obtained</th>
-              <th className="px-4 py-3 border text-left text-sm md:text-base">Total Marks</th>
-              <th className="px-4 py-3 border text-left text-sm md:text-base">Date</th>
-              <th className="px-4 py-3 border text-left text-sm md:text-base">Time</th>
+              <th className="px-4 py-3 text-left">Score</th>
+              <th className="px-4 py-3 text-left">Total Marks</th>
+              <th className="px-4 py-3 text-left">Category</th>
+              <th className="px-4 py-3 text-left">Date</th>
             </tr>
           </thead>
 
-          {/* Table Body */}
           <tbody>
-            {data.map((row, index) => (
-              <tr key={row.id} className="hover:bg-gray-50">
-                <td className="px-4 py-2 border text-sm md:text-base">{index + 1}</td>
-                <td className="px-4 py-2 border text-sm md:text-base">{row.obtained}</td>
-                <td className="px-4 py-2 border text-sm md:text-base">{row.total}</td>
-                <td className="px-4 py-2 border text-sm md:text-base">{row.date}</td>
-                <td className="px-4 py-2 border text-sm md:text-base">{row.time}</td>
-              </tr>
-            ))}
-          </tbody>
+            {data.results.map((result) => {
+              const d = new Date(result.date);
+              const formattedDate = d.toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              });
 
+              return (
+                <tr
+                  key={result._id}
+                    className="border-b hover:bg-gray-100 transition"
+                >
+                  <td className="px-4 py-3 font-semibold">
+                    {result.score}
+                  </td>
+                  <td className="px-4 py-3">{result.totalQuestions}</td>
+                  <td className="px-4 py-3 capitalize">{result.category}</td>
+                  <td className="px-4 py-3">{formattedDate}</td>
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
       </div>
     </div>
   );
 };
 
-export default ResultTable;
+export default Dashboard;

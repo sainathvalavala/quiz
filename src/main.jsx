@@ -14,39 +14,41 @@ import { store } from "./app/store.js";
 import Login from "./components/Login.jsx";
 import Signup from "./components/Signup.jsx";
 import AdminSignup from "./components/AdminSignup.jsx";
-import { ToastContainer, toast } from 'react-toastify';
-import ResultTable from "./pages/Dashboard.jsx";
+import { ToastContainer, toast } from "react-toastify";
+import Dashboard from "./pages/Dashboard.jsx";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
   },
-   {
-        path: `/quiz/:category`,
-        element: <QuizPage />,
+  {
+    path: `/quiz/:category`,
+    element: <QuizPage />,
   },
   {
-  path:"/login",
-  element:<Login/>
+    path: "/login",
+    element: <Login />,
   },
   {
-  path:"/signup",
-  element:<Signup/>
+    path: "/signup",
+    element: <Signup />,
   },
   {
-  path:"/admin/signup",
-  element:<AdminSignup/>
+    path: "/admin/signup",
+    element: <AdminSignup />,
   },
   {
-  path:"/dashboard",
-  element:<ResultTable/>
-  }
-  
+    path: `/dashboard/:id`,
+    element: <Dashboard />,
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <ToastContainer />
-    <RouterProvider router={router} />
+    <GoogleOAuthProvider clientId="994056393652-eplrknii2u277dak0if9bl28vokl74pb.apps.googleusercontent.com">
+      <ToastContainer />
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
   </Provider>
 );

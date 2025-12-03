@@ -5,6 +5,7 @@ import { useUserLoginMutation } from "../services/quizApi";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { userlogin } from "../services/userSlice";
+import LoginWithGoogle from "./GoogleLogin";
 
 const Login = () => {
   const [userLogin] = useUserLoginMutation();
@@ -20,22 +21,24 @@ const Login = () => {
       try {
         const res = await userLogin(values);
         if (res?.data?.msg == "Successful") {
-  localStorage.setItem("token", res?.data?.token);
-  localStorage.setItem("username", res?.data?.userDetails.username);
-  localStorage.setItem("role", res?.data?.userDetails.role);
-  dispatch(
-    userlogin({
-      username: res?.data?.userDetails,
-      token: res?.data?.token,
-    })
-  );
+          localStorage.setItem("token", res?.data?.token);
+          localStorage.setItem("username", res?.data?.userDetails.username);
+          localStorage.setItem("role", res?.data?.userDetails.role);
+          localStorage.setItem("userId", res.data.userDetails.userId);
 
-  navigate("/");
-  toast.success("Login Successfull!", {
-    position: "top-right",
-  });
-}
- else {
+
+          dispatch(
+            userlogin({
+              username: res?.data?.userDetails,
+              token: res?.data?.token,
+            })
+          );
+
+          navigate("/");
+          toast.success("Login Successfull!", {
+            position: "top-right",
+          });
+        } else {
           console.log("Invalid Credentials");
         }
       } catch (error) {
@@ -83,15 +86,17 @@ const Login = () => {
               className="w-full px-4 py-2 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-
+          <div>
+          <LoginWithGoogle/>
+          </div>
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white font-semibold py-2 rounded-lg hover:bg-purple-700 transition"
+            className="w-full bg-purple-600 text-white font-semibold py-2 rounded-lg hover:bg-purple-700 transition  cursor-pointer"
           >
             Login
           </button>
         </form>
-
+        
         <p className="text-center mt-4 text-gray-600">
           New user?{" "}
           <Link

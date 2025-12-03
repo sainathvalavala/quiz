@@ -34,6 +34,7 @@ const QuizPage = () => {
         username,
         score: submitResult.result,
         totalQuestions: submitResult.totalQuestions,
+        category:category
       });
     }
   }, [submitResult]);
@@ -64,6 +65,68 @@ const QuizPage = () => {
         </div>
       </div>
     );
+    
+    if (submitResult) {
+  return (
+    <>
+      {/* Header */}
+      <div className="fixed w-full flex items-center justify-between bg-[#232f3e] z-50">
+        <div className="text-[34px] font-bold text-purple-400 ps-4">
+          {category} Quiz
+        </div>
+
+        <div className="text-white text-2xl font-extrabold px-4">
+          Your Score: {submitResult.result}/{submitResult.totalQuestions}
+        </div>
+
+        <Link
+          to={"/"}
+          className="m-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md hover:shadow-lg"
+        >
+          Home
+        </Link>
+      </div>
+
+      
+      <div className="flex justify-center pt-28 px-4">
+        <div className="w-full max-w-xl shadow-2xl p-6 bg-white rounded-lg">
+          <h2 className="text-2xl font-bold mb-6 text-center">Review Answers</h2>
+
+          {data?.map((question, index) => {
+            const correctAns = submitResult.correctAnswers[question.sno];
+            const userAns = submitResult.submittedAnswers[question.sno];
+
+            return (
+              <div
+                key={index}
+                className="border p-4 rounded mb-6 shadow bg-gray-50"
+              >
+                <p className="font-semibold text-lg mb-2">
+                  {index + 1}. {question.question.text}
+                </p>
+
+                {question.options.map((opt, idx) => {
+                  let bg = "";
+
+                  if (opt === correctAns) bg = "bg-green-200"; // correct
+                  if (opt === userAns && opt !== correctAns)
+                    bg = "bg-red-200"; // wrong selected
+
+                  return (
+                    <p key={idx} className={`p-2 rounded mt-2 ${bg}`}>
+                      {opt}
+                    </p>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+}
+
 
   return (
     <>

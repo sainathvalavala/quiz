@@ -8,42 +8,61 @@ export const quizApi = createApi({
       query: (category) => `/getAllQuestions/${category}`,
     }),
     submittedAnswers: builder.mutation({
-     query:(data)=>({
-     url : `/submittedAnswers`,
-     method:"POST",
-     body: data,
-     }),
+      query: (data) => ({
+        url: `/submittedAnswers`,
+        method: "POST",
+        body: data,
+      }),
     }),
     addUser: builder.mutation({
-    query:(data)=>({
-    url:"/addUser",
-    method:"POST",
-    body:data,
-    }),
+      query: (data) => ({
+        url: "/addUser",
+        method: "POST",
+        body: data,
+      }),
     }),
     addAdmin: builder.mutation({
-    query:(data)=>({
-    url:"/addAdmin",
-    method:"POST",
-    body:data
-    }),
+      query: (data) => ({
+        url: "/addAdmin",
+        method: "POST",
+        body: data,
+      }),
     }),
     userLogin: builder.mutation({
-    query:(data)=>({
-    url:"/userLogin",
-    method:"POST",
-    body:data
+      query: (data) => ({
+        url: "/userLogin",
+        method: "POST",
+        body: data,
+      }),
     }),
+    saveResult: builder.mutation({
+      query: (data) => ({
+        url: "/saveResult",
+        method: "POST",
+        body: data,
+      }),
     }),
-    saveResult:builder.mutation({
-    query:(data)=>({
-    url:"/saveResult",
-    method:"POST",
-    body:data
-    })
-    })
+    getResult: builder.query({
+      query: (userId) => `/getResult/${userId}`,
+    }),
+    googleLogin: builder.mutation({
+      query: (data) => ({
+        url: "/googleLogin",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
-
 });
 
-export const { useGetAllQuestionsQuery,useSubmittedAnswersMutation,useLazyGetAllQuestionsQuery,useAddUserMutation,useAddAdminMutation,useUserLoginMutation,useSaveResultMutation } = quizApi;
+export const {
+  useGetAllQuestionsQuery,
+  useSubmittedAnswersMutation,
+  useLazyGetAllQuestionsQuery,
+  useAddUserMutation,
+  useAddAdminMutation,
+  useUserLoginMutation,
+  useSaveResultMutation,
+  useGetResultQuery,
+  useGoogleLoginMutation,
+} = quizApi;
